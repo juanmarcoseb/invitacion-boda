@@ -130,169 +130,213 @@ export default function Rsvp() {
     }
   }
 
+  /* ===================== UI ===================== */
+
   if (step === "pin") {
     return (
-      <section className="mx-auto max-w-2xl space-y-6">
-        <h1 className="text-3xl font-bold text-center">Confirmar asistencia (RSVP)</h1>
-        <p className="text-center opacity-80">
-          Ingresa el PIN familiar que te compartimos en la invitación.
-        </p>
-        <form onSubmit={handleVerifyPin} className="space-y-4 bg-white p-4 rounded-xl shadow">
-          <label htmlFor={pinId} className="block text-sm font-medium">PIN de invitación</label>
-          <input
-            id={pinId}
-            className="w-full rounded border px-3 py-2"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            placeholder="Ej.: 123456"
-            value={pin}
-            onChange={(e) => setPin(e.target.value.trim())}
-          />
-          <button
-            type="submit"
-            className="w-full rounded bg-black text-white py-2 font-semibold disabled:opacity-50"
-            disabled={loading || pin.length === 0}
-          >
-            {loading ? "Verificando..." : "Continuar"}
-          </button>
-          {error && <p className="text-red-600 text-sm">{error}</p>}
-        </form>
+      <section className="wrapper w-full">
+        <div className="mx-auto max-w-[720px] card p-6 md:p-10">
+          <header className="text-center mb-6">
+            <h1 className="font-heading text-[44px] leading-none md:text-[64px] text-[var(--brand-primary)]">
+              RSVP
+            </h1>
+            <div className="ornament my-3">
+              <span className="dot" aria-hidden="true"></span>
+            </div>
+            <p className="muted text-base md:text-lg">
+              Ingresa el <strong>PIN familiar</strong> que te compartimos en la invitación.
+            </p>
+          </header>
+
+          <form onSubmit={handleVerifyPin} className="space-y-5">
+            <div className="space-y-2">
+              <label htmlFor={pinId} className="block text-sm font-semibold">
+                PIN de invitación
+              </label>
+              <input
+                id={pinId}
+                className="input text-lg"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="Ej.: 123456"
+                value={pin}
+                onChange={(e) => setPin(e.target.value.trim())}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-primary w-full md:w-auto"
+              disabled={loading || pin.length === 0}
+            >
+              {loading ? "Verificando…" : "Continuar"}
+            </button>
+
+            {error && <p className="text-sm text-red-700">{error}</p>}
+          </form>
+        </div>
       </section>
     )
   }
 
   return (
-    <section className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-3xl font-bold text-center">Confirmar asistencia (RSVP)</h1>
+    <section className="wrapper w-full">
+      <div className="mx-auto max-w-[920px] card p-6 md:p-10 space-y-7">
+        <header className="text-center">
+          <h1 className="font-heading text-[42px] leading-none md:text-[60px] text-[var(--brand-primary)]">
+            Confirmar asistencia
+          </h1>
+          <div className="ornament my-3">
+            <span className="dot" aria-hidden="true"></span>
+          </div>
+          <p className="muted text-base md:text-lg">
+            Selecciona a los miembros de tu familia, indica si asistirán y envía la confirmación.
+          </p>
+        </header>
 
-      <form onSubmit={handleSubmitBulk} className="space-y-5 bg-white p-4 rounded-xl shadow">
         {/* Mensaje único */}
-        <div className="space-y-1">
-          <label htmlFor={messageId} className="block text-sm font-medium">
-            Mensaje para los novios (opcional)
+        <section className="space-y-2">
+          <label htmlFor={messageId} className="block text-sm font-semibold">
+            Mensaje para los novios <span className="muted font-normal">(opcional)</span>
           </label>
           <textarea
             id={messageId}
             rows={3}
             placeholder="¡Con gusto estaremos ahí!"
-            className="w-full rounded border px-3 py-2"
+            className="input"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-        </div>
+        </section>
 
         {/* Acciones rápidas */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <section className="flex flex-wrap items-center justify-between gap-3 border-t pt-5">
           <div className="flex items-center gap-2">
             <input
               id="selectAll"
               type="checkbox"
+              className="check h-4 w-4"
               checked={anySelectable && allSelected}
               onChange={(e) => toggleSelectAll(e.target.checked)}
-              className="h-4 w-4"
             />
             <label htmlFor="selectAll" className="text-sm">Seleccionar todos los pendientes</label>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
             <span>Aplicar a seleccionados:</span>
-            <button type="button" onClick={() => setForSelected("yes")} className="rounded border px-2 py-1">
+            <button type="button" onClick={() => setForSelected("yes")} className="btn-ghost">
               Asistirán
             </button>
-            <button type="button" onClick={() => setForSelected("no")} className="rounded border px-2 py-1">
+            <button type="button" onClick={() => setForSelected("no")} className="btn-ghost">
               No asistirán
             </button>
           </div>
-        </div>
+        </section>
 
-        {/* Tabla de invitados */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="text-left border-b">
-                <th className="py-2 pr-3">Sel.</th>
-                <th className="py-2 pr-3">Nombre</th>
-                <th className="py-2 pr-3">Asistencia</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.guest_id} className="border-b align-top">
-                  <td className="py-2 pr-3">
+        {/* Lista de invitados con chips Sí/No */}
+        <section className="space-y-3">
+          {rows.length === 0 && (
+            <div className="text-center py-10 muted">No hay invitados para este PIN.</div>
+          )}
+
+          {rows.map((r) => {
+            const canEdit = !r.is_confirmed && r.selected
+            return (
+              <article key={r.guest_id} className="guest-row">
+                {/* Selección */}
+                <div className="flex items-start gap-3 md:items-center">
+                  <input
+                    type="checkbox"
+                    disabled={r.is_confirmed}
+                    checked={r.selected && !r.is_confirmed}
+                    onChange={(e) => {
+                      const checked = e.target.checked
+                      setRows(prev =>
+                        prev.map(x => x.guest_id === r.guest_id ? { ...x, selected: checked } : x)
+                      )
+                    }}
+                    className="check mt-1 h-5 w-5 md:mt-0"
+                    aria-label={`Seleccionar a ${r.full_name}`}
+                  />
+                  <div className={r.is_confirmed ? "opacity-60" : ""}>
+                    <div className="font-heading text-[28px] leading-none text-[var(--brand-primary)]">
+                      {r.full_name}
+                    </div>
+                    {r.is_confirmed && (
+                      <div className="text-xs text-[var(--brand-primary)]">Ya confirmado</div>
+                    )}
+                    {!r.is_confirmed && !r.selected && (
+                      <div className="text-xs muted">Marca para confirmar</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Chips Sí/No (solo activos si está seleccionado) */}
+                <div className="flex gap-3 md:gap-4">
+                  <label className={`chip ${canEdit && r.attending === "yes" ? "is-on" : ""}`}>
                     <input
-                      type="checkbox"
-                      disabled={r.is_confirmed}
-                      checked={r.selected && !r.is_confirmed}
-                      onChange={(e) => {
-                        const checked = e.target.checked
-                        setRows(prev => prev.map(x => x.guest_id === r.guest_id ? { ...x, selected: checked } : x))
+                      type="radio"
+                      className="sr-only"
+                      name={`attending-${r.guest_id}`}
+                      value="yes"
+                      checked={r.attending === "yes"}
+                      disabled={!canEdit}
+                      onChange={() => {
+                        setRows(prev =>
+                          prev.map(x => x.guest_id === r.guest_id ? { ...x, attending: "yes" } : x)
+                        )
                       }}
-                      className="h-4 w-4"
-                      aria-label={`Seleccionar a ${r.full_name}`}
                     />
-                  </td>
-                  <td className="py-2 pr-3">
-                    <div className={r.is_confirmed ? "opacity-60" : ""}>
-                      {r.full_name} {r.is_confirmed && <span className="text-xs text-green-700">(ya confirmado)</span>}
-                    </div>
-                  </td>
-                  <td className="py-2 pr-3">
-                    <div className="flex gap-3">
-                      <label className="inline-flex items-center gap-1">
-                        <input
-                          type="radio"
-                          name={`attending-${r.guest_id}`}
-                          value="yes"
-                          checked={r.attending === "yes"}
-                          disabled={r.is_confirmed || !r.selected}
-                          onChange={() => {
-                            setRows(prev => prev.map(x => x.guest_id === r.guest_id ? { ...x, attending: "yes" } : x))
-                          }}
-                        />
-                        <span>Sí</span>
-                      </label>
-                      <label className="inline-flex items-center gap-1">
-                        <input
-                          type="radio"
-                          name={`attending-${r.guest_id}`}
-                          value="no"
-                          checked={r.attending === "no"}
-                          disabled={r.is_confirmed || !r.selected}
-                          onChange={() => {
-                            setRows(prev => prev.map(x => x.guest_id === r.guest_id ? { ...x, attending: "no" } : x))
-                          }}
-                        />
-                        <span>No</span>
-                      </label>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {rows.length === 0 && (
-                <tr><td colSpan={3} className="py-6 text-center opacity-70">No hay invitados para este PIN.</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                    Sí
+                  </label>
 
-        <div className="flex items-center justify-between">
-          <p className="text-sm opacity-80">
+                  <label className={`chip ${canEdit && r.attending === "no" ? "is-on" : ""}`}>
+                    <input
+                      type="radio"
+                      className="sr-only"
+                      name={`attending-${r.guest_id}`}
+                      value="no"
+                      checked={r.attending === "no"}
+                      disabled={!canEdit}
+                      onChange={() => {
+                        setRows(prev =>
+                          prev.map(x => x.guest_id === r.guest_id ? { ...x, attending: "no" } : x)
+                        )
+                      }}
+                    />
+                    No
+                  </label>
+                </div>
+              </article>
+            )
+          })}
+        </section>
+
+        {/* Footer acciones */}
+        <section className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <p className="text-sm muted">
             Seleccionados: <strong>{selectedCount}</strong>
           </p>
           <button
             type="submit"
-            className="rounded bg-black text-white px-4 py-2 font-semibold disabled:opacity-50"
+            onClick={handleSubmitBulk}
+            className="btn-primary w-full md:w-auto"
             disabled={loading || selectedCount === 0}
           >
-            {loading ? "Enviando..." : "Confirmar seleccionados"}
+            {loading ? "Enviando…" : "Confirmar seleccionados"}
           </button>
-        </div>
+        </section>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-        {okMsg && <p className="text-green-700 text-sm">{okMsg}</p>}
+        {/* Alertas */}
+        {error && <p className="text-sm text-red-700">{error}</p>}
+        {okMsg && <p className="text-sm" style={{ color: "var(--brand-primary)" }}>{okMsg}</p>}
 
+        {/* Resultados por invitado */}
         {serverResults && serverResults.length > 0 && (
-          <div className="rounded-lg border p-3 text-sm">
+          <section
+            className="rounded-xl border p-4 text-sm bg-white/90"
+            style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}
+          >
             <p className="font-semibold mb-2">Resultados:</p>
             <ul className="list-disc ml-5 space-y-1">
               {serverResults.map(res => {
@@ -304,9 +348,9 @@ export default function Rsvp() {
                 )
               })}
             </ul>
-          </div>
+          </section>
         )}
-      </form>
+      </div>
     </section>
   )
 }
