@@ -1,18 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import './index.css'
 import App from './App'
-import Home from './pages/Home'
 import Rsvp from './pages/Rsvp'
 
 const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      { path: '/', element: <Home /> },
+      // raíz -> redirige al RSVP
+      { path: '/', element: <Navigate to="/rsvp" replace /> },
+      // RSVP visible
       { path: '/rsvp', element: <Rsvp /> },
-      // aquí luego agregamos /detalles, /rsvp, /galeria, etc.
+      // cualquier otra ruta -> RSVP
+      { path: '*', element: <Navigate to="/rsvp" replace /> },
     ],
   },
 ])
