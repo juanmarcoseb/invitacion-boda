@@ -51,17 +51,21 @@ body {
   }
 }
 
-/* Tipografías (Google Fonts ya están enlazadas en index.html) */
+/* Tipografías (Google Fonts ya están enlazadas en index.html)
+   Great Vibes = títulos; Tenor Sans = textos */
 @layer base {
   :root {
-    --font-script: "Ms Madi", cursive;                 /* para títulos caligráficos */
-    --font-serif: "Bodoni Moda SC", serif;             /* para textos y headers elegantes */
+    --font-script: "Great Vibes", cursive;             /* TÍTULOS (antes Ms Madi) */
+    --font-body: "Tenor Sans", system-ui, sans-serif;  /* Textos */
   }
 
   * { font-feature-settings: "liga" 1, "kern" 1; }
 
-  h1,h2,h3,.font-heading { font-family: var(--font-script); }
-  body, .font-body { font-family: var(--font-serif); }
+  /* Aplica Great Vibes a títulos y cualquier .font-heading */
+  h1, h2, h3, .font-heading { font-family: var(--font-script); }
+
+  /* Aplica Tenor Sans al resto del contenido */
+  body, .font-body { font-family: var(--font-body); }
 }
 
 /* ============ COMPONENTS & UTILITIES ============ */

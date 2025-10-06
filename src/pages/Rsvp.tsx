@@ -144,14 +144,14 @@ export default function Rsvp() {
               <span className="dot" aria-hidden="true"></span>
             </div>
             <p className="muted text-base md:text-lg">
-              Ingresa el <strong>PIN familiar</strong> que te compartimos en la invitación.
+              INGRESA EL <strong>PIN FAMILIAR</strong> QUE TE COMPARTIMOS EN LA INVITACIÓN.
             </p>
           </header>
 
           <form onSubmit={handleVerifyPin} className="space-y-5">
             <div className="space-y-2">
               <label htmlFor={pinId} className="block text-sm font-semibold">
-                PIN de invitación
+                PIN DE INVITACIÓN
               </label>
               <input
                 id={pinId}
@@ -184,20 +184,22 @@ export default function Rsvp() {
       <div className="mx-auto max-w-[920px] card p-6 md:p-10 space-y-7">
         <header className="text-center">
           <h1 className="font-heading text-[42px] leading-none md:text-[60px] text-[var(--brand-primary)]">
-            Confirmar asistencia
+            <strong>Confirmar Asistencia</strong>
           </h1>
-          <div className="ornament my-3">
-            <span className="dot" aria-hidden="true"></span>
-          </div>
-          <p className="muted text-base md:text-lg">
-            Selecciona a los miembros de tu familia, indica si asistirán y envía la confirmación.
-          </p>
         </header>
+
+        <div className="ornament my-3">
+          <span className="dot" aria-hidden="true"></span>
+        </div>
+
+        <p className="muted text-center text-base md:text-lg">
+          SELECCIONA A LOS MIEMBROS DE TU FAMILIA, INDICA SI ASISTIRÁN Y ENVÍA LA CONFIRMACIÓN.
+        </p>
 
         {/* Mensaje único */}
         <section className="space-y-2">
           <label htmlFor={messageId} className="block text-sm font-semibold">
-            Mensaje para los novios <span className="muted font-normal">(opcional)</span>
+            MENSAJE PARA LOS NOVIOS <span className="muted font-normal">(opcional)</span>
           </label>
           <textarea
             id={messageId}
@@ -219,16 +221,16 @@ export default function Rsvp() {
               checked={anySelectable && allSelected}
               onChange={(e) => toggleSelectAll(e.target.checked)}
             />
-            <label htmlFor="selectAll" className="text-sm">Seleccionar todos los pendientes</label>
+            <label htmlFor="selectAll" className="text-sm">SELECCIONAR TODOS LOS PENDIENTES</label>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
-            <span>Aplicar a seleccionados:</span>
+            <span>APLICAR A SELECCIONADOS</span>
             <button type="button" onClick={() => setForSelected("yes")} className="btn-ghost">
-              Asistirán
+              ASISTIRÁN
             </button>
             <button type="button" onClick={() => setForSelected("no")} className="btn-ghost">
-              No asistirán
+              NO ASISTIRÁN
             </button>
           </div>
         </section>
@@ -236,7 +238,7 @@ export default function Rsvp() {
         {/* Lista de invitados con chips Sí/No */}
         <section className="space-y-3">
           {rows.length === 0 && (
-            <div className="text-center py-10 muted">No hay invitados para este PIN.</div>
+            <div className="text-center py-10 muted">NO HAY INVITADOS PARA ESTE PIN.</div>
           )}
 
           {rows.map((r) => {
@@ -263,10 +265,10 @@ export default function Rsvp() {
                       {r.full_name}
                     </div>
                     {r.is_confirmed && (
-                      <div className="text-xs text-[var(--brand-primary)]">Ya confirmado</div>
+                      <div className="text-xs text-[var(--brand-primary)]">YA CONFIRMADO</div>
                     )}
                     {!r.is_confirmed && !r.selected && (
-                      <div className="text-xs muted">Marca para confirmar</div>
+                      <div className="text-xs muted">SELECCIONA PARA CONFIRMAR</div>
                     )}
                   </div>
                 </div>
@@ -287,7 +289,7 @@ export default function Rsvp() {
                         )
                       }}
                     />
-                    Sí
+                    SÍ
                   </label>
 
                   <label className={`chip ${canEdit && r.attending === "no" ? "is-on" : ""}`}>
@@ -304,7 +306,7 @@ export default function Rsvp() {
                         )
                       }}
                     />
-                    No
+                    NO
                   </label>
                 </div>
               </article>
@@ -315,7 +317,7 @@ export default function Rsvp() {
         {/* Footer acciones */}
         <section className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <p className="text-sm muted">
-            Seleccionados: <strong>{selectedCount}</strong>
+            SELECCIONADOS <strong>{selectedCount}</strong>
           </p>
           <button
             type="submit"
@@ -337,7 +339,7 @@ export default function Rsvp() {
             className="rounded-xl border p-4 text-sm bg-white/90"
             style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}
           >
-            <p className="font-semibold mb-2">Resultados:</p>
+            <p className="font-semibold mb-2">RESULTADOS:</p>
             <ul className="list-disc ml-5 space-y-1">
               {serverResults.map(res => {
                 const g = rows.find(r => r.guest_id === res.guest_id)
