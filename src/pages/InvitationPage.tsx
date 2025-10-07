@@ -1,0 +1,116 @@
+import { Link } from "react-router-dom"
+import { useEffect, useMemo, useState } from "react"
+
+export default function InvitationPage() {
+  const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")
+  const [ready, setReady] = useState(false)
+
+  // Precarga específica por breakpoint
+  useEffect(() => {
+    const desktopImgs = ["/img/completa.png"]
+    const mobileImgs  = ["/img/sobre-abierto.png", "/img/carta.png"]
+    const common      = ["/img/confirmacion.png", "/img/regalos.png", "/img/vestimenta.png"] // <-- agregado
+
+    const isMobile = window.matchMedia("(max-width: 767px)").matches
+    const imgs = (isMobile ? mobileImgs : desktopImgs).concat(common)
+
+    let loaded = 0
+    imgs.forEach(src => {
+      const i = new Image()
+      i.onload = () => {
+        loaded += 1
+        if (loaded === imgs.length) {
+          setReady(true)
+          setPhase("opening")
+        }
+      }
+      i.src = src
+    })
+  }, [])
+
+  // completar animación
+  useEffect(() => {
+    if (phase === "opening") {
+      const t = window.setTimeout(() => setPhase("open"), 1900)
+      return () => window.clearTimeout(t)
+    }
+  }, [phase])
+
+  const isOpen = phase === "open"
+  const stageState = isOpen ? "is-open" : ""
+
+  // clases (empalman con CSS)
+  const deskCls = useMemo(
+    () => ["desk-open", ready ? "is-ready" : "", phase !== "loading" ? "is-in" : ""].join(" "),
+    [phase, ready]
+  )
+  const openCls = useMemo(
+    () => ["env-open", ready ? "is-ready" : "", phase !== "loading" ? "is-in" : ""].join(" "),
+    [phase, ready]
+  )
+  const letterCls = useMemo(
+    () => ["letter", ready ? "is-ready" : "", phase !== "loading" ? "is-out" : ""].join(" "),
+    [phase, ready]
+  )
+
+  return (
+    <section className="wrapper w-full">
+      {/* Escenario */}
+      <div className={`invite-stage mx-auto ${stageState}`}>
+        {/* Desktop: imagen completa */}
+        <img
+          src="/img/completa.png"
+          alt="Invitación abierta"
+          className={deskCls}
+          draggable={false}
+        />
+        {/* Móvil: sobre abierto + carta */}
+        <img
+          src="/img/sobre-abierto.png"
+          alt="Sobre abierto"
+          className={openCls}
+          draggable={false}
+        />
+        <img
+          src="/img/carta.png"
+          alt="Tarjeta"
+          className={letterCls}
+          draggable={false}
+        />
+      </div>
+
+      {/* Secciones inferiores */}
+      <div className={`extras-wrap ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+        <div className="extras-grid">
+          <Link to="/rsvp" aria-label="Ir a confirmar asistencia" className="block">
+            <img
+              src="/img/confirmacion.png"
+              alt="Confirmación - Ir al RSVP"
+              className="select-none"
+              draggable={false}
+            />
+          </Link>
+          <div>
+            <img
+              src="/img/regalos.png"
+              alt="Mesa de regalos"
+              className="select-none"
+              draggable={false}
+            />
+          </div>
+        </div>
+
+        {/* Código de vestimenta */}
+        <div className="mt-6 grid place-items-center">
+          <img
+            src="/img/vestimenta.png"
+            alt="Código de vestimenta"
+            className="w-full h-auto max-w-[760px] select-none"
+            draggable={false}
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
