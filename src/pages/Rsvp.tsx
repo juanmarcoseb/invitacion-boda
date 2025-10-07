@@ -1,4 +1,5 @@
 import { useId, useMemo, useState } from "react"
+import { Link } from "react-router-dom"          // <-- agregado
 import { supabase } from "../lib/supabase"
 
 type Guest = {
@@ -44,7 +45,8 @@ export default function Rsvp() {
     [rows]
   )
 
-  const refreshHousehold = async (p: string) => {
+  // ⇩ devuelve cuántos invitados hay para el PIN (además de setRows)
+  const refreshHousehold = async (p: string): Promise<number> => {
     const { data, error } = await supabase
       .rpc("verify_pin_with_household_status_v2", { p_pin: p })
     if (error) throw error
@@ -64,6 +66,7 @@ export default function Rsvp() {
             : "no",
       }))
     )
+    return list.length
   }
 
   const handleVerifyPin = async (e: React.FormEvent) => {
@@ -73,10 +76,18 @@ export default function Rsvp() {
     setOkMsg(null)
     setServerResults(null)
     try {
-      await refreshHousehold(pin)
-      setStep("form")
+      const cleanPin = pin.trim()
+      const count = await refreshHousehold(cleanPin)
+
+      if (count > 0) {
+        setStep("form")
+      } else {
+        setError("PIN no válido o sin familia asignada. Verifica el PIN e inténtalo de nuevo.")
+        setStep("pin")
+      }
     } catch (err: any) {
       setError(err.message || "Ocurrió un error verificando el PIN.")
+      setStep("pin")
     } finally {
       setLoading(false)
     }
@@ -115,7 +126,7 @@ export default function Rsvp() {
       }
 
       const { data, error } = await supabase.rpc("submit_rsvp_bulk", {
-        p_pin: pin,
+        p_pin: pin.trim(),
         p_items: payload,
       })
       if (error) throw error
@@ -123,7 +134,7 @@ export default function Rsvp() {
       const results = (data ?? []) as { guest_id: string; ok: boolean; result: string }[]
       setServerResults(results)
 
-      await refreshHousehold(pin)
+      await refreshHousehold(pin.trim())
 
       const okTotal = results.filter(r => r.ok).length
       const skipped = results.length - okTotal
@@ -140,10 +151,16 @@ export default function Rsvp() {
   /* ===================== UI ===================== */
 
   if (step === "pin") {
-    /* Centramos el cuadro del PIN en toda la pantalla */
     return (
       <section className="wrapper w-full min-h-[100svh] flex items-center justify-center py-8">
         <div className="card overflow-hidden w-full p-5 md:p-8 lg:p-10">
+          {/* botón volver */}
+          <div className="mb-3">
+            <Link to="/invitacion" className="btn-ghost inline-flex">
+              ← Volver a la invitación
+            </Link>
+          </div>
+
           <header className="text-center mb-5 md:mb-6">
             <h1 className="font-heading text-[36px] leading-none md:text-[56px] lg:text-[64px] text-[var(--brand-primary)]">
               RSVP
@@ -176,7 +193,7 @@ export default function Rsvp() {
               <button
                 type="submit"
                 className="btn-primary"
-                disabled={loading || pin.length === 0}
+                disabled={loading || pin.trim().length === 0}
               >
                 {loading ? "Verificando…" : "Continuar"}
               </button>
@@ -192,6 +209,13 @@ export default function Rsvp() {
   return (
     <section className="wrapper w-full">
       <div className="card overflow-hidden p-5 md:p-8 lg:p-10 space-y-6 md:space-y-7">
+        {/* botón volver arriba 
+        <div className="flex justify-end">
+          <Link to="/invitacion" className="btn-ghost">
+            ← Volver a la invitación
+          </Link>
+        </div>*/}
+
         <header className="text-center">
           <h1 className="font-heading text-[34px] leading-none md:text-[52px] lg:text-[60px] text-[var(--brand-primary)]">
             Confirmar asistencia
@@ -245,7 +269,7 @@ export default function Rsvp() {
           </div>
         </section>
 
-        {/* Lista de invitados (chips siempre a la derecha) */}
+        {/* Lista de invitados */}
         <section className="space-y-3">
           {rows.length === 0 && (
             <div className="text-center py-10 muted">No hay invitados para este PIN.</div>
@@ -258,7 +282,6 @@ export default function Rsvp() {
 
             return (
               <article key={r.guest_id} className="guest-row">
-                {/* Izquierda: checkbox + nombre + (si aplica) badge de estado */}
                 <div className="guest-row__top">
                   <input
                     type="checkbox"
@@ -296,7 +319,6 @@ export default function Rsvp() {
                   </div>
                 </div>
 
-                {/* Derecha: chips alineados al borde derecho */}
                 <div className="guest-row__options">
                   <label className={`chip ${canEdit && r.attending === "yes" ? "is-on" : ""}`}>
                     <input
@@ -343,6 +365,9 @@ export default function Rsvp() {
             Seleccionados: <strong>{selectedCount}</strong>
           </p>
           <div className="actions-group">
+            <Link to="/invitacion" className="btn-ghost">
+              ← Volver a la invitación
+            </Link>
             <button
               type="submit"
               onClick={handleSubmitBulk}

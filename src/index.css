@@ -3,17 +3,13 @@
 /* ============ THEME ============ */
 :root {
   color-scheme: light;
-
-  /* Paleta */
-  --brand-primary: #334e36;   /* verde principal */
-  --brand-primary2: #394f34;  /* verde extra */
-  --brand-sand: #f7e8c3;      /* arena cálido */
-  --brand-gold: #c19937;      /* dorado acento */
-  --brand-gold2: #dec989;     /* dorado suave */
-
-  --ink: #171717;             /* texto */
-  --ink-soft: #4b5563;        /* gris 600 */
-
+  --brand-primary: #334e36;
+  --brand-primary2: #394f34;
+  --brand-sand: #f7e8c3;
+  --brand-gold: #c19937;
+  --brand-gold2: #dec989;
+  --ink: #171717;
+  --ink-soft: #4b5563;
   --ring-soft: color-mix(in oklab, var(--brand-gold) 35%, transparent);
 }
 
@@ -34,8 +30,6 @@ body {
     var(--brand-sand);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-
-  /* Respeta safe areas en iOS */
   padding-left: max(env(safe-area-inset-left), 0px);
   padding-right: max(env(safe-area-inset-right), 0px);
 }
@@ -56,23 +50,19 @@ body {
   }
 }
 
-/* Tipografías (Google Fonts ya están enlazadas en index.html)
-   Great Vibes = títulos; Tenor Sans = textos */
+/* Tipografías */
 @layer base {
   :root {
-    --font-script: "Great Vibes", cursive;             /* TÍTULOS */
-    --font-body: "Tenor Sans", system-ui, sans-serif;  /* Textos */
+    --font-script: "Great Vibes", cursive;
+    --font-body: "Tenor Sans", system-ui, sans-serif;
   }
-
   * { font-feature-settings: "liga" 1, "kern" 1; }
-
   h1, h2, h3, .font-heading { font-family: var(--font-script); }
   body, .font-body { font-family: var(--font-body); }
 }
 
 /* ============ COMPONENTS & UTILITIES ============ */
 @layer utilities {
-  /* Contenedor responsivo centrado con padding seguro */
   .wrapper {
     width: min(100%, 1040px);
     margin-inline: auto;
@@ -83,19 +73,14 @@ body {
     .wrapper { padding-inline: 1.25rem; padding-block: 1.25rem; }
   }
 
-  /* Tarjeta tipo “glass” con tope de ancho realmente responsive */
   .card {
     width: 100%;
-    /* nunca pegar al borde en móvil */
     max-width: min(720px, 100% - 24px);
     margin-inline: auto;
-
     border-radius: 18px;
     border: 1px solid color-mix(in oklab, var(--brand-gold2) 45%, #fff);
     background: rgba(255,255,255,.88);
-    box-shadow:
-      0 25px 50px rgba(0,0,0,.08),
-      inset 0 0 0 1px rgba(255,255,255,.5);
+    box-shadow: 0 25px 50px rgba(0,0,0,.08), inset 0 0 0 1px rgba(255,255,255,.5);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
   }
@@ -103,7 +88,6 @@ body {
     .card { background: rgba(255,255,255,.98); }
   }
 
-  /* Inputs/textarea */
   .input {
     width: 100%;
     border-radius: 12px;
@@ -117,12 +101,9 @@ body {
   .input::placeholder { color: #9aa4b2; }
   .input:focus {
     border-color: color-mix(in oklab, var(--brand-gold) 35%, transparent);
-    box-shadow:
-      0 12px 30px rgba(0,0,0,.06),
-      0 0 0 3px var(--ring-soft);
+    box-shadow: 0 12px 30px rgba(0,0,0,.06), 0 0 0 3px var(--ring-soft);
   }
 
-  /* Botón primario */
   .btn-primary {
     display: inline-flex; align-items: center; justify-content: center;
     gap: .5rem;
@@ -132,20 +113,15 @@ body {
     letter-spacing: .2px;
     color: #fff;
     background: linear-gradient(180deg, var(--brand-primary), var(--brand-primary2));
-    box-shadow:
-      0 12px 28px rgba(0,0,0,.12),
-      0 0 0 1px rgba(255,255,255,.2) inset;
+    box-shadow: 0 12px 28px rgba(0,0,0,.12), 0 0 0 1px rgba(255,255,255,.2) inset;
     transition: transform .08s ease, filter .2s ease;
-    width: 100%; /* full-width en móvil */
+    width: 100%;
   }
-  @media (min-width: 768px) {
-    .btn-primary { width: auto; }
-  }
+  @media (min-width: 768px) { .btn-primary { width: auto; } }
   .btn-primary:hover { filter: brightness(1.04); transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
   .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
 
-  /* Botón “ghost” (borde) */
   .btn-ghost {
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 999px;
@@ -154,17 +130,13 @@ body {
     border: 1px solid rgba(0,0,0,.08);
     background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.85));
     transition: background .2s ease, border-color .2s ease;
-    width: 100%; /* full-width en móvil */
+    width: 100%;
   }
   .btn-ghost:hover { background: rgba(255,255,255,.97); border-color: color-mix(in oklab, var(--brand-gold2) 55%, transparent); }
-  @media (min-width: 768px) {
-    .btn-ghost { width: auto; }
-  }
+  @media (min-width: 768px) { .btn-ghost { width: auto; } }
 
-  /* Chips Sí / No — adaptativas, no se salen en móvil */
   .chip {
     display: inline-flex; align-items: center; justify-content: center;
-    /* ancho y tipografía fluidos según viewport */
     min-width: clamp(72px, 26vw, 110px);
     border-radius: 999px;
     padding: .55rem clamp(.8rem, 2.8vw, 1.1rem);
@@ -177,7 +149,6 @@ body {
     letter-spacing: .02em;
     white-space: nowrap;
   }
-  /* ▶︎ Estado seleccionado MUCHO más visible */
   .chip.is-on {
     background: var(--brand-primary);
     color: #fff;
@@ -185,10 +156,9 @@ body {
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-primary) 22%, transparent);
   }
 
-  /* Fila invitado — por defecto 3 columnas para alinear a derecha */
   .guest-row {
     display: grid;
-    grid-template-columns: auto 1fr auto; /* checkbox | nombre | botones */
+    grid-template-columns: auto 1fr auto;
     gap: .9rem 1rem;
     align-items: center;
     border: 1px solid color-mix(in oklab, var(--brand-gold2) 55%, #fff);
@@ -196,49 +166,25 @@ body {
     border-radius: 14px;
     padding: .95rem 1.05rem;
   }
-  @media (min-width: 768px) {
-    .guest-row { padding: 1rem 1.25rem; }
-  }
+  @media (min-width: 768px) { .guest-row { padding: 1rem 1.25rem; } }
 
-  .guest-row__top {
-    display: flex; align-items: flex-start; gap: .9rem;
-    min-width: 0;
-  }
+  .guest-row__top { display: flex; align-items: flex-start; gap: .9rem; min-width: 0; }
+  .guest-row__options { justify-self: end; display: inline-flex; gap: .6rem; flex-wrap: nowrap; max-width: 100%; }
 
-  /* Botones SI/NO pegados a la derecha */
-  .guest-row__options {
-    justify-self: end;            /* clave: siempre a la derecha */
-    display: inline-flex;
-    gap: .6rem;
-    flex-wrap: nowrap;
-    max-width: 100%;
-  }
-
-  /* En teléfonos muy angostos, baja las chips a la 2ª línea (derecha) para evitar desbordes */
   @media (max-width: 420px) {
-    .guest-row {
-      grid-template-columns: auto 1fr;      /* checkbox | nombre */
-    }
+    .guest-row { grid-template-columns: auto 1fr; }
     .guest-row__options {
-      grid-column: 1 / -1;                  /* ocupar ancho completo debajo */
-      justify-self: end;                    /* pero alineadas a la derecha */
-      margin-top: .25rem;
-      flex-wrap: wrap;                      /* permite salto si no cabe */
-      row-gap: .4rem;
+      grid-column: 1 / -1; justify-self: end; margin-top: .25rem; flex-wrap: wrap; row-gap: .4rem;
     }
   }
 
   .check { accent-color: var(--brand-primary); }
   .radio { accent-color: var(--brand-primary); }
 
-  /* Ornament */
-  .ornament {
-    position: relative; height: 24px; display: grid; place-items: center;
-  }
+  .ornament { position: relative; height: 24px; display: grid; place-items: center; }
   .ornament::before,
   .ornament::after {
-    content: "";
-    height: 1px; width: 38%;
+    content: ""; height: 1px; width: 38%;
     background: linear-gradient(90deg, transparent, var(--brand-gold2), transparent);
   }
   .ornament .dot {
@@ -248,17 +194,133 @@ body {
   }
 
   .muted { color: var(--ink-soft); }
-
-  /* Grupo de acciones: grid en móvil, fila en desktop */
-  .actions-group {
-    display: grid; gap: .6rem;
-  }
+  .actions-group { display: grid; gap: .6rem; }
   @media (min-width: 768px) {
-    .actions-group {
-      grid-auto-flow: column;
-      justify-content: end;
-      align-items: center;
-      gap: .75rem;
-    }
+    .actions-group { grid-auto-flow: column; justify-content: end; align-items: center; gap: .75rem; }
+  }
+}
+
+/* =========================
+   HOME / INVITACIÓN
+   ========================= */
+@layer utilities {
+  /* ------------- Landing con sobre cerrado ------------- */
+.hero-closed {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;         /* ocupa toda la altura visible */
+  display: grid;
+  place-items: center;         /* centra el contenido */
+  overflow: hidden;            /* evita scrolls raros si sobra un poco */
+}
+
+/* ANTES forzábamos height:100svh; ahora contenemos por ambas dimensiones */
+.hero-closed__img {
+  /* Contener dentro de la pantalla en ambos ejes */
+  width: min(100vw, 1200px);   /* nunca más ancho que el viewport ni >1200px */
+  height: auto;
+  max-height: 100svh;          /* y nunca más alto que la pantalla */
+  object-fit: contain;         /* sin recortar */
+  display: block;
+
+  /* Compat Safari/iOS */
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* hitbox del sello, centrada respecto al contenedor (svh compensa barras iOS) */
+.hero-closed .seal-hitbox{
+  position: absolute;
+  z-index: 5;
+  width: clamp(64px, 10vw, 120px);
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  left: 50%;
+  top: 56%;
+  transform: translate(-50%, -50%);
+  border: 0;
+  cursor: pointer;
+  background: radial-gradient(closest-side, rgba(255,215,0,.18), rgba(255,215,0,0));
+  transition: transform .2s ease;
+}
+.hero-closed .seal-hitbox:hover{ transform: translate(-50%, -50%) scale(1.04); }
+.hero-closed .seal-hitbox:active{ transform: translate(-50%, -50%) scale(.98); }
+
+/* en móviles muy altos, baja un pelín la hitbox para que siga “sobre” el sello */
+@media (max-width: 480px) and (min-height: 740px) {
+  .hero-closed .seal-hitbox { top: 58%; }
+}
+
+
+  /* ------------- Escenario de invitación (página /invitacion) ------------- */
+  .invite-stage{
+    position: relative;
+    width: min(92vw, 1200px);
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+  }
+  .invite-stage img{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 92vh;        /* evita desbordarse verticalmente en desktop */
+    height: auto;
+    object-fit: contain;
+    -webkit-user-select: none; /* Safari/iOS */
+    user-select: none;
+    pointer-events: none;
+    will-change: transform, opacity, filter;
+  }
+  .is-ready{
+    opacity: 1;
+    transition: transform 2s ease-in-out, opacity 2s ease-in-out, filter 2s ease-in-out;
+  }
+  .invite-stage img:not(.is-ready){ opacity: 0; }
+
+  /* Desktop: una sola imagen (completa.png) */
+  .desk-open{ z-index: 6; opacity: 0; transform: translate(-50%, -44%) scale(.985); filter: drop-shadow(0 18px 30px rgba(0,0,0,.12)); }
+  .desk-open.is-in{ opacity: 1; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 24px 40px rgba(0,0,0,.18)); }
+
+  /* Móvil: sobre abierto + carta */
+  .env-open{ z-index: 5; opacity: 0; transform: translate(-50%, -46%) scale(.985); filter: drop-shadow(0 18px 30px rgba(0,0,0,.12)); }
+  .env-open.is-in{ opacity: 1; transform: translate(-50%, -52%) scale(1); filter: drop-shadow(0 24px 40px rgba(0,0,0,.18)); }
+  .letter{ z-index: 8; opacity: 0; transform: translate(-50%, -40%) scale(.95); filter: drop-shadow(0 10px 20px rgba(0,0,0,.10)); }
+  .letter.is-out{ opacity: 1; transform: translate(-50%, 26%) scale(1); filter: drop-shadow(0 20px 40px rgba(0,0,0,.22)); transition-delay: .25s; }
+
+  /* Mostrar/ocultar por breakpoint */
+  @media (min-width: 768px){ .env-open, .letter{ display:none; } }
+  @media (max-width: 767px){ .desk-open{ display:none; } }
+
+  /* En móvil, cuando está abierto, necesitamos altura extra para alojar la carta abajo */
+  @media (max-width: 767px){
+    .invite-stage.is-open{ min-height: 175svh; } /* más espacio para evitar montajes */
+    .invite-stage{ width: 100%; max-width: 420px; margin-inline: auto; }
+  }
+
+  /* ------------- Tarjetas inferiores ------------- */
+  .extras-wrap{
+    width: min(100%, 1100px);
+    margin-inline: auto;
+    margin-top: clamp(1.25rem, 2.5vw, 2rem);
+    transition: opacity .6s ease;
+  }
+  .extras-grid{
+    display: grid;
+    gap: 2rem;
+    justify-items: center;
+  }
+  @media (min-width: 768px){
+    .extras-grid{ grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+  }
+  .extras-grid img{ width: 100%; height: auto; object-fit: contain; max-width: 560px; }
+
+  /* Accesibilidad */
+  @media (prefers-reduced-motion: reduce){
+    .invite-stage img{ transition: none !important; }
   }
 }
