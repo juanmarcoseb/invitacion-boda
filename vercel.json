@@ -1,7 +1,5 @@
 {
-  "redirects": [
-    { "source": "/", "destination": "/rsvp", "permanent": true }
-  ],
+  "redirects": [],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
