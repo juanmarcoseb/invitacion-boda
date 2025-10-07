@@ -17,7 +17,7 @@
   --ring-soft: color-mix(in oklab, var(--brand-gold) 35%, transparent);
 }
 
-html, body, #root { height: 100%; }
+html, body, #root { height: 100%; min-height: 100%; }
 
 /* ===== Fondo con imagen + overlay para contraste ===== */
 body {
@@ -34,8 +34,13 @@ body {
     var(--brand-sand);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+
+  /* Respeta safe areas en iOS */
+  padding-left: max(env(safe-area-inset-left), 0px);
+  padding-right: max(env(safe-area-inset-right), 0px);
 }
-/* iOS Safari: sin fixed */
+
+/* iOS Safari: sin fixed para evitar jitter */
 @media (max-width: 767px) {
   body {
     background:
@@ -55,29 +60,35 @@ body {
    Great Vibes = títulos; Tenor Sans = textos */
 @layer base {
   :root {
-    --font-script: "Great Vibes", cursive;             /* TÍTULOS (antes Ms Madi) */
+    --font-script: "Great Vibes", cursive;             /* TÍTULOS */
     --font-body: "Tenor Sans", system-ui, sans-serif;  /* Textos */
   }
 
   * { font-feature-settings: "liga" 1, "kern" 1; }
 
-  /* Aplica Great Vibes a títulos y cualquier .font-heading */
   h1, h2, h3, .font-heading { font-family: var(--font-script); }
-
-  /* Aplica Tenor Sans al resto del contenido */
   body, .font-body { font-family: var(--font-body); }
 }
 
 /* ============ COMPONENTS & UTILITIES ============ */
 @layer utilities {
+  /* Contenedor responsivo centrado con padding seguro */
   .wrapper {
-    width: min(100%, 1024px);
+    width: min(100%, 1040px);
     margin-inline: auto;
     padding-inline: 1rem;
+    padding-block: 1rem;
+  }
+  @media (min-width: 768px) {
+    .wrapper { padding-inline: 1.25rem; padding-block: 1.25rem; }
   }
 
-  /* Tarjeta tipo “glass” */
+  /* Tarjeta tipo “glass” con tope de ancho en móvil */
   .card {
+    width: 100%;
+    max-width: 720px;
+    margin-inline: auto;
+
     border-radius: 18px;
     border: 1px solid color-mix(in oklab, var(--brand-gold2) 45%, #fff);
     background: rgba(255,255,255,.88);
@@ -115,7 +126,7 @@ body {
     display: inline-flex; align-items: center; justify-content: center;
     gap: .5rem;
     border-radius: 12px;
-    padding: .85rem 1.15rem;
+    padding: .9rem 1rem;
     font-weight: 700;
     letter-spacing: .2px;
     color: #fff;
@@ -124,6 +135,10 @@ body {
       0 12px 28px rgba(0,0,0,.12),
       0 0 0 1px rgba(255,255,255,.2) inset;
     transition: transform .08s ease, filter .2s ease;
+    width: 100%; /* full-width en móvil */
+  }
+  @media (min-width: 768px) {
+    .btn-primary { width: auto; }
   }
   .btn-primary:hover { filter: brightness(1.04); transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
@@ -133,32 +148,43 @@ body {
   .btn-ghost {
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 999px;
-    padding: .55rem .95rem;
+    padding: .65rem 1rem;
     font-weight: 600;
     border: 1px solid rgba(0,0,0,.08);
     background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.85));
     transition: background .2s ease, border-color .2s ease;
+    width: 100%; /* full-width en móvil */
   }
   .btn-ghost:hover { background: rgba(255,255,255,.97); border-color: color-mix(in oklab, var(--brand-gold2) 55%, transparent); }
+  @media (min-width: 768px) {
+    .btn-ghost { width: auto; }
+  }
 
   /* Chips Sí / No */
   .chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 90px; /* tamaño táctil cómodo */
     border-radius: 999px;
-    padding: .35rem .8rem;
+    padding: .55rem 1rem;
     border: 1px solid color-mix(in oklab, var(--brand-gold2) 55%, #fff);
     background: #fff;
-    font-weight: 600;
+    font-weight: 700;
     transition: all .18s ease;
+    text-transform: uppercase;
+    letter-spacing: .02em;
   }
+  /* ▶︎ Estado seleccionado MUCHO más visible */
   .chip.is-on {
-    background: color-mix(in oklab, var(--brand-gold2) 20%, #fff);
-    border-color: var(--brand-gold2);
+    background: var(--brand-primary);
+    color: #fff;
+    border-color: var(--brand-primary2);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-primary) 22%, transparent);
   }
 
-  /* Fila invitado (responsiva) */
+  /* Fila invitado — SIEMPRE tres columnas para alinear los botones a la derecha */
   .guest-row {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto; /* checkbox | nombre | botones */
     gap: .9rem 1rem;
     align-items: center;
     border: 1px solid color-mix(in oklab, var(--brand-gold2) 55%, #fff);
@@ -167,14 +193,47 @@ body {
     padding: .95rem 1.05rem;
   }
   @media (min-width: 768px) {
-    .guest-row {
-      grid-template-columns: auto 1fr auto;
-      padding: 1rem 1.25rem;
-    }
+    .guest-row { padding: 1rem 1.25rem; }
+  }
+
+  .guest-row__top {
+    display: flex; align-items: flex-start; gap: .9rem;
+  }
+
+  /* Botones SI/NO pegados a la derecha */
+  .guest-row__options {
+    justify-self: end;            /* clave: siempre a la derecha */
+    display: inline-flex;
+    gap: .6rem;
+    flex-wrap: nowrap;
+  }
+  /* En teléfonos MUY angostos permitimos wrap pero manteniendo la alineación */
+  @media (max-width: 360px) {
+    .guest-row__options { flex-wrap: wrap; justify-content: flex-end; }
+    .chip { min-width: 80px; padding: .5rem .9rem; }
   }
 
   .check { accent-color: var(--brand-primary); }
   .radio { accent-color: var(--brand-primary); }
+
+  /* ===== Pills de estado tras confirmar (NUEVO) ===== */
+  .status-pill {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .02em;
+  }
+  .status-yes {
+    background: var(--brand-primary);
+    color: #fff;
+  }
+  .status-no {
+    background: #fff;
+    border: 1px solid var(--brand-gold2);
+    color: var(--ink);
+  }
 
   /* Ornament */
   .ornament {
@@ -193,4 +252,17 @@ body {
   }
 
   .muted { color: var(--ink-soft); }
+
+  /* Grupo de acciones: grid en móvil, fila en desktop */
+  .actions-group {
+    display: grid; gap: .6rem;
+  }
+  @media (min-width: 768px) {
+    .actions-group {
+      grid-auto-flow: column;
+      justify-content: end;
+      align-items: center;
+      gap: .75rem;
+    }
+  }
 }

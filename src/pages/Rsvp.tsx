@@ -7,6 +7,7 @@ type Guest = {
   household_id: string | null
   allowed_plus_ones: number
   is_confirmed: boolean
+  attending: boolean | null   // ⬅️ NUEVO: puede venir null si no ha confirmado
 }
 
 type Row = {
@@ -44,17 +45,26 @@ export default function Rsvp() {
   )
 
   const refreshHousehold = async (p: string) => {
+    // ⬇️ Usamos la nueva función v2 que también devuelve "attending"
     const { data, error } = await supabase
-      .rpc("verify_pin_with_household_status", { p_pin: p })
+      .rpc("verify_pin_with_household_status_v2", { p_pin: p })
     if (error) throw error
+
     const list = (data ?? []) as Guest[]
+
     setRows(
       list.map(g => ({
         guest_id: g.guest_id,
         full_name: g.full_name,
         is_confirmed: g.is_confirmed,
         selected: false,
-        attending: "yes",
+        // Si ya confirmó y tenemos attending, respétalo; si no, deja "yes" por defecto
+        attending:
+          g.attending === null || g.attending === undefined
+            ? "yes"
+            : g.attending
+            ? "yes"
+            : "no",
       }))
     )
   }
@@ -116,6 +126,7 @@ export default function Rsvp() {
       const results = (data ?? []) as { guest_id: string; ok: boolean; result: string }[]
       setServerResults(results)
 
+      // Refresca para que se vean bloqueados y con su estado (Asiste/No asiste)
       await refreshHousehold(pin)
 
       const okTotal = results.filter(r => r.ok).length
@@ -133,29 +144,30 @@ export default function Rsvp() {
   /* ===================== UI ===================== */
 
   if (step === "pin") {
+    /* Centramos el cuadro del PIN en toda la pantalla */
     return (
-      <section className="wrapper w-full">
-        <div className="mx-auto max-w-[720px] card p-6 md:p-10">
-          <header className="text-center mb-6">
-            <h1 className="font-heading text-[44px] leading-none md:text-[64px] text-[var(--brand-primary)]">
+      <section className="wrapper w-full min-h-[100svh] flex items-center justify-center py-8">
+        <div className="card w-full max-w-[720px] p-5 md:p-8 lg:p-10">
+          <header className="text-center mb-5 md:mb-6">
+            <h1 className="font-heading text-[36px] leading-none md:text-[56px] lg:text-[64px] text-[var(--brand-primary)]">
               RSVP
             </h1>
             <div className="ornament my-3">
               <span className="dot" aria-hidden="true"></span>
             </div>
-            <p className="muted text-base md:text-lg">
-              INGRESA EL <strong>PIN FAMILIAR</strong> QUE TE COMPARTIMOS EN LA INVITACIÓN.
+            <p className="muted text-sm md:text-base">
+              Ingresa el <strong>PIN familiar</strong> que te compartimos en la invitación.
             </p>
           </header>
 
-          <form onSubmit={handleVerifyPin} className="space-y-5">
+          <form onSubmit={handleVerifyPin} className="space-y-4 md:space-y-5">
             <div className="space-y-2">
-              <label htmlFor={pinId} className="block text-sm font-semibold">
-                PIN DE INVITACIÓN
+              <label htmlFor={pinId} className="block text-xs md:text-sm font-semibold">
+                PIN de invitación
               </label>
               <input
                 id={pinId}
-                className="input text-lg"
+                className="input text-base md:text-lg"
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 placeholder="Ej.: 123456"
@@ -164,13 +176,15 @@ export default function Rsvp() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="btn-primary w-full md:w-auto"
-              disabled={loading || pin.length === 0}
-            >
-              {loading ? "Verificando…" : "Continuar"}
-            </button>
+            <div className="actions-group">
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={loading || pin.length === 0}
+              >
+                {loading ? "Verificando…" : "Continuar"}
+              </button>
+            </div>
 
             {error && <p className="text-sm text-red-700">{error}</p>}
           </form>
@@ -181,10 +195,10 @@ export default function Rsvp() {
 
   return (
     <section className="wrapper w-full">
-      <div className="mx-auto max-w-[920px] card p-6 md:p-10 space-y-7">
+      <div className="card p-5 md:p-8 lg:p-10 space-y-6 md:space-y-7">
         <header className="text-center">
-          <h1 className="font-heading text-[42px] leading-none md:text-[60px] text-[var(--brand-primary)]">
-            <strong>Confirmar Asistencia</strong>
+          <h1 className="font-heading text-[34px] leading-none md:text-[52px] lg:text-[60px] text-[var(--brand-primary)]">
+            Confirmar asistencia
           </h1>
         </header>
 
@@ -192,14 +206,14 @@ export default function Rsvp() {
           <span className="dot" aria-hidden="true"></span>
         </div>
 
-        <p className="muted text-center text-base md:text-lg">
-          SELECCIONA A LOS MIEMBROS DE TU FAMILIA, INDICA SI ASISTIRÁN Y ENVÍA LA CONFIRMACIÓN.
+        <p className="muted text-center text-sm md:text-base">
+          Selecciona a los miembros de tu familia, indica si asistirán y envía la confirmación.
         </p>
 
         {/* Mensaje único */}
         <section className="space-y-2">
-          <label htmlFor={messageId} className="block text-sm font-semibold">
-            MENSAJE PARA LOS NOVIOS <span className="muted font-normal">(opcional)</span>
+          <label htmlFor={messageId} className="block text-xs md:text-sm font-semibold">
+            Mensaje para los novios <span className="muted font-normal">(opcional)</span>
           </label>
           <textarea
             id={messageId}
@@ -212,7 +226,7 @@ export default function Rsvp() {
         </section>
 
         {/* Acciones rápidas */}
-        <section className="flex flex-wrap items-center justify-between gap-3 border-t pt-5">
+        <section className="grid gap-3 border-t pt-4 md:flex md:flex-wrap md:items-center md:justify-between">
           <div className="flex items-center gap-2">
             <input
               id="selectAll"
@@ -221,32 +235,37 @@ export default function Rsvp() {
               checked={anySelectable && allSelected}
               onChange={(e) => toggleSelectAll(e.target.checked)}
             />
-            <label htmlFor="selectAll" className="text-sm">SELECCIONAR TODOS LOS PENDIENTES</label>
+            <label htmlFor="selectAll" className="text-sm">Seleccionar todos los pendientes</label>
           </div>
 
-          <div className="flex items-center gap-2 text-sm">
-            <span>APLICAR A SELECCIONADOS</span>
+          <div className="actions-group">
+            <span className="hidden md:inline text-sm">Aplicar a seleccionados:</span>
             <button type="button" onClick={() => setForSelected("yes")} className="btn-ghost">
-              ASISTIRÁN
+              Asistirán
             </button>
             <button type="button" onClick={() => setForSelected("no")} className="btn-ghost">
-              NO ASISTIRÁN
+              No asistirán
             </button>
           </div>
         </section>
 
-        {/* Lista de invitados con chips Sí/No */}
+        {/* Lista de invitados (chips siempre a la derecha) */}
         <section className="space-y-3">
           {rows.length === 0 && (
-            <div className="text-center py-10 muted">NO HAY INVITADOS PARA ESTE PIN.</div>
+            <div className="text-center py-10 muted">No hay invitados para este PIN.</div>
           )}
 
           {rows.map((r) => {
             const canEdit = !r.is_confirmed && r.selected
+            const finalBadge =
+              r.is_confirmed
+                ? (r.attending === "yes" ? "ASISTE" : "NO ASISTE")
+                : null
+
             return (
               <article key={r.guest_id} className="guest-row">
-                {/* Selección */}
-                <div className="flex items-start gap-3 md:items-center">
+                {/* Izquierda: checkbox + nombre + (si aplica) badge de estado */}
+                <div className="guest-row__top">
                   <input
                     type="checkbox"
                     disabled={r.is_confirmed}
@@ -257,24 +276,35 @@ export default function Rsvp() {
                         prev.map(x => x.guest_id === r.guest_id ? { ...x, selected: checked } : x)
                       )
                     }}
-                    className="check mt-1 h-5 w-5 md:mt-0"
+                    className="check mt-[2px] h-5 w-5 md:mt-0"
                     aria-label={`Seleccionar a ${r.full_name}`}
                   />
-                  <div className={r.is_confirmed ? "opacity-60" : ""}>
-                    <div className="font-heading text-[28px] leading-none text-[var(--brand-primary)]">
+                  <div className={r.is_confirmed ? "opacity-80" : ""}>
+                    <div className="font-heading text-[24px] leading-none md:text-[28px] text-[var(--brand-primary)]">
                       {r.full_name}
                     </div>
-                    {r.is_confirmed && (
-                      <div className="text-xs text-[var(--brand-primary)]">YA CONFIRMADO</div>
-                    )}
+
+                    {/* Subtexto según estado */}
                     {!r.is_confirmed && !r.selected && (
-                      <div className="text-xs muted">SELECCIONA PARA CONFIRMAR</div>
+                      <div className="text-xs muted">Marca para confirmar</div>
+                    )}
+                    {r.is_confirmed && finalBadge && (
+                      <div className="mt-1 inline-flex items-center gap-2">
+                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full
+                          ${r.attending === "yes"
+                            ? "bg-[rgba(51,78,54,.12)] text-[var(--brand-primary)] border border-[rgba(51,78,54,.25)]"
+                            : "bg-[rgba(0,0,0,.06)] text-[#333] border border-[rgba(0,0,0,.12)]"
+                          }`}>
+                          {finalBadge}
+                        </span>
+                        <span className="text-xs muted">(ya confirmado)</span>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* Chips Sí/No (solo activos si está seleccionado) */}
-                <div className="flex gap-3 md:gap-4">
+                {/* Derecha: chips alineados al borde derecho */}
+                <div className="guest-row__options">
                   <label className={`chip ${canEdit && r.attending === "yes" ? "is-on" : ""}`}>
                     <input
                       type="radio"
@@ -289,7 +319,7 @@ export default function Rsvp() {
                         )
                       }}
                     />
-                    SÍ
+                    Sí
                   </label>
 
                   <label className={`chip ${canEdit && r.attending === "no" ? "is-on" : ""}`}>
@@ -306,7 +336,7 @@ export default function Rsvp() {
                         )
                       }}
                     />
-                    NO
+                    No
                   </label>
                 </div>
               </article>
@@ -314,32 +344,32 @@ export default function Rsvp() {
           })}
         </section>
 
-        {/* Footer acciones */}
-        <section className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <p className="text-sm muted">
-            SELECCIONADOS <strong>{selectedCount}</strong>
+        {/* Footer */}
+        <section className="grid gap-3 md:flex md:items-center md:justify-between">
+          <p className="text-sm muted text-center md:text-left">
+            Seleccionados: <strong>{selectedCount}</strong>
           </p>
-          <button
-            type="submit"
-            onClick={handleSubmitBulk}
-            className="btn-primary w-full md:w-auto"
-            disabled={loading || selectedCount === 0}
-          >
-            {loading ? "Enviando…" : "Confirmar seleccionados"}
-          </button>
+          <div className="actions-group">
+            <button
+              type="submit"
+              onClick={handleSubmitBulk}
+              className="btn-primary"
+              disabled={loading || selectedCount === 0}
+            >
+              {loading ? "Enviando…" : "Confirmar seleccionados"}
+            </button>
+          </div>
         </section>
 
-        {/* Alertas */}
         {error && <p className="text-sm text-red-700">{error}</p>}
         {okMsg && <p className="text-sm" style={{ color: "var(--brand-primary)" }}>{okMsg}</p>}
 
-        {/* Resultados por invitado */}
         {serverResults && serverResults.length > 0 && (
           <section
             className="rounded-xl border p-4 text-sm bg-white/90"
             style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}
           >
-            <p className="font-semibold mb-2">RESULTADOS:</p>
+            <p className="font-semibold mb-2">Resultados:</p>
             <ul className="list-disc ml-5 space-y-1">
               {serverResults.map(res => {
                 const g = rows.find(r => r.guest_id === res.guest_id)
