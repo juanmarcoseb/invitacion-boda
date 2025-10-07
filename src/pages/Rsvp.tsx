@@ -7,7 +7,7 @@ type Guest = {
   household_id: string | null
   allowed_plus_ones: number
   is_confirmed: boolean
-  attending: boolean | null   // ⬅️ NUEVO: puede venir null si no ha confirmado
+  attending: boolean | null
 }
 
 type Row = {
@@ -45,20 +45,17 @@ export default function Rsvp() {
   )
 
   const refreshHousehold = async (p: string) => {
-    // ⬇️ Usamos la nueva función v2 que también devuelve "attending"
     const { data, error } = await supabase
       .rpc("verify_pin_with_household_status_v2", { p_pin: p })
     if (error) throw error
 
     const list = (data ?? []) as Guest[]
-
     setRows(
       list.map(g => ({
         guest_id: g.guest_id,
         full_name: g.full_name,
         is_confirmed: g.is_confirmed,
         selected: false,
-        // Si ya confirmó y tenemos attending, respétalo; si no, deja "yes" por defecto
         attending:
           g.attending === null || g.attending === undefined
             ? "yes"
@@ -126,7 +123,6 @@ export default function Rsvp() {
       const results = (data ?? []) as { guest_id: string; ok: boolean; result: string }[]
       setServerResults(results)
 
-      // Refresca para que se vean bloqueados y con su estado (Asiste/No asiste)
       await refreshHousehold(pin)
 
       const okTotal = results.filter(r => r.ok).length
@@ -147,7 +143,7 @@ export default function Rsvp() {
     /* Centramos el cuadro del PIN en toda la pantalla */
     return (
       <section className="wrapper w-full min-h-[100svh] flex items-center justify-center py-8">
-        <div className="card w-full max-w-[720px] p-5 md:p-8 lg:p-10">
+        <div className="card overflow-hidden w-full p-5 md:p-8 lg:p-10">
           <header className="text-center mb-5 md:mb-6">
             <h1 className="font-heading text-[36px] leading-none md:text-[56px] lg:text-[64px] text-[var(--brand-primary)]">
               RSVP
@@ -195,7 +191,7 @@ export default function Rsvp() {
 
   return (
     <section className="wrapper w-full">
-      <div className="card p-5 md:p-8 lg:p-10 space-y-6 md:space-y-7">
+      <div className="card overflow-hidden p-5 md:p-8 lg:p-10 space-y-6 md:space-y-7">
         <header className="text-center">
           <h1 className="font-heading text-[34px] leading-none md:text-[52px] lg:text-[60px] text-[var(--brand-primary)]">
             Confirmar asistencia
@@ -258,9 +254,7 @@ export default function Rsvp() {
           {rows.map((r) => {
             const canEdit = !r.is_confirmed && r.selected
             const finalBadge =
-              r.is_confirmed
-                ? (r.attending === "yes" ? "ASISTE" : "NO ASISTE")
-                : null
+              r.is_confirmed ? (r.attending === "yes" ? "ASISTE" : "NO ASISTE") : null
 
             return (
               <article key={r.guest_id} className="guest-row">
@@ -284,7 +278,6 @@ export default function Rsvp() {
                       {r.full_name}
                     </div>
 
-                    {/* Subtexto según estado */}
                     {!r.is_confirmed && !r.selected && (
                       <div className="text-xs muted">Marca para confirmar</div>
                     )}
