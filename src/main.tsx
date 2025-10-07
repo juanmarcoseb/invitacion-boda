@@ -4,17 +4,20 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import './index.css'
 import App from './App'
 import Rsvp from './pages/Rsvp'
+import Home from './pages/Home'
 
 const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      // raíz -> redirige al RSVP
-      { path: '/', element: <Navigate to="/rsvp" replace /> },
+      // Home visible públicamente
+      { path: '/', element: <Home /> },
+
       // RSVP visible
       { path: '/rsvp', element: <Rsvp /> },
-      // cualquier otra ruta -> RSVP
-      { path: '*', element: <Navigate to="/rsvp" replace /> },
+
+      // cualquier otra ruta -> Home (o podrías mandarla a /rsvp si prefieres)
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
 ])
