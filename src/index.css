@@ -26,17 +26,25 @@ body {
       rgba(255,255,255,.60) 55%,
       rgba(255,255,255,.65) 100%
     ),
-    url("/img/fondo.png") center/cover no-repeat fixed,
+    url("/img/fondo.png") center/cover no-repeat,
     var(--brand-sand);
+  background-attachment: fixed; /* mantiene el fondo fijo */
+  -webkit-background-attachment: scroll; /* fix para Safari móvil */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   padding-left: max(env(safe-area-inset-left), 0px);
   padding-right: max(env(safe-area-inset-right), 0px);
 }
 
-/* iOS Safari: sin fixed para evitar jitter */
+/* En móviles, usamos pseudo-elemento para simular el fixed */
 @media (max-width: 767px) {
   body {
+    background-attachment: scroll;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
     background:
       linear-gradient(
         180deg,
@@ -47,6 +55,7 @@ body {
       ),
       url("/img/fondo.png") center/cover no-repeat,
       var(--brand-sand);
+    z-index: -1;
   }
 }
 
@@ -205,55 +214,47 @@ body {
    ========================= */
 @layer utilities {
   /* ------------- Landing con sobre cerrado ------------- */
-.hero-closed {
-  position: relative;
-  width: 100%;
-  min-height: 100svh;         /* ocupa toda la altura visible */
-  display: grid;
-  place-items: center;         /* centra el contenido */
-  overflow: hidden;            /* evita scrolls raros si sobra un poco */
-}
-
-/* ANTES forzábamos height:100svh; ahora contenemos por ambas dimensiones */
-.hero-closed__img {
-  /* Contener dentro de la pantalla en ambos ejes */
-  width: min(100vw, 1200px);   /* nunca más ancho que el viewport ni >1200px */
-  height: auto;
-  max-height: 100svh;          /* y nunca más alto que la pantalla */
-  object-fit: contain;         /* sin recortar */
-  display: block;
-
-  /* Compat Safari/iOS */
-  -webkit-user-select: none;
-  user-select: none;
-  pointer-events: none;
-}
-
-/* hitbox del sello, centrada respecto al contenedor (svh compensa barras iOS) */
-.hero-closed .seal-hitbox{
-  position: absolute;
-  z-index: 5;
-  width: clamp(64px, 10vw, 120px);
-  aspect-ratio: 1 / 1;
-  border-radius: 999px;
-  left: 50%;
-  top: 56%;
-  transform: translate(-50%, -50%);
-  border: 0;
-  cursor: pointer;
-  background: radial-gradient(closest-side, rgba(255,215,0,.18), rgba(255,215,0,0));
-  transition: transform .2s ease;
-}
-.hero-closed .seal-hitbox:hover{ transform: translate(-50%, -50%) scale(1.04); }
-.hero-closed .seal-hitbox:active{ transform: translate(-50%, -50%) scale(.98); }
-
-/* en móviles muy altos, baja un pelín la hitbox para que siga “sobre” el sello */
-@media (max-width: 480px) and (min-height: 740px) {
-  .hero-closed .seal-hitbox { top: 58%; }
-}
-
+  .hero-closed {
+    position: relative;
+    width: 100%;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .hero-closed__img {
+    width: min(100vw, 1200px);
+    height: auto;
+    max-height: 100svh;
+    object-fit: contain;
+    display: block;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+  .hero-closed .seal-hitbox{
+    position: absolute;
+    z-index: 5;
+    width: clamp(64px, 10vw, 120px);
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    left: 50%;
+    top: 56%;
+    transform: translate(-50%, -50%);
+    border: 0;
+    cursor: pointer;
+    background: radial-gradient(closest-side, rgba(255,215,0,.18), rgba(255,215,0,0));
+    transition: transform .2s ease;
+  }
+  .hero-closed .seal-hitbox:hover{ transform: translate(-50%, -50%) scale(1.04); }
+  .hero-closed .seal-hitbox:active{ transform: translate(-50%, -50%) scale(.98); }
+  @media (max-width: 480px) and (min-height: 740px) {
+    .hero-closed .seal-hitbox { top: 58%; }
+  }
 
   /* ------------- Escenario de invitación (página /invitacion) ------------- */
+  :root{ --par: 0px; --par2: 0px; } /* parallax variables por scroll */
+
   .invite-stage{
     position: relative;
     width: min(92vw, 1200px);
@@ -268,10 +269,10 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     max-width: 100%;
-    max-height: 92vh;        /* evita desbordarse verticalmente en desktop */
+    max-height: 92vh;
     height: auto;
     object-fit: contain;
-    -webkit-user-select: none; /* Safari/iOS */
+    -webkit-user-select: none;
     user-select: none;
     pointer-events: none;
     will-change: transform, opacity, filter;
@@ -284,22 +285,27 @@ body {
 
   /* Desktop: una sola imagen (completa.png) */
   .desk-open{ z-index: 6; opacity: 0; transform: translate(-50%, -44%) scale(.985); filter: drop-shadow(0 18px 30px rgba(0,0,0,.12)); }
-  .desk-open.is-in{ opacity: 1; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 24px 40px rgba(0,0,0,.18)); }
+  .desk-open.is-in{ opacity: 1; transform: translate(-50%, -50%) translateY(var(--par)) scale(1); filter: drop-shadow(0 24px 40px rgba(0,0,0,.18)); }
 
   /* Móvil: sobre abierto + carta */
   .env-open{ z-index: 5; opacity: 0; transform: translate(-50%, -46%) scale(.985); filter: drop-shadow(0 18px 30px rgba(0,0,0,.12)); }
-  .env-open.is-in{ opacity: 1; transform: translate(-50%, -52%) scale(1); filter: drop-shadow(0 24px 40px rgba(0,0,0,.18)); }
+  .env-open.is-in{ opacity: 1; transform: translate(-50%, -52%) translateY(var(--par)) scale(1); filter: drop-shadow(0 24px 40px rgba(0,0,0,.18)); }
   .letter{ z-index: 8; opacity: 0; transform: translate(-50%, -40%) scale(.95); filter: drop-shadow(0 10px 20px rgba(0,0,0,.10)); }
-  .letter.is-out{ opacity: 1; transform: translate(-50%, 26%) scale(1); filter: drop-shadow(0 20px 40px rgba(0,0,0,.22)); transition-delay: .25s; }
+  .letter.is-out{ opacity: 1; transform: translate(-50%, 26%) translateY(var(--par2)) scale(1); filter: drop-shadow(0 20px 40px rgba(0,0,0,.22)); }
 
   /* Mostrar/ocultar por breakpoint */
   @media (min-width: 768px){ .env-open, .letter{ display:none; } }
   @media (max-width: 767px){ .desk-open{ display:none; } }
 
-  /* En móvil, cuando está abierto, necesitamos altura extra para alojar la carta abajo */
+  /* En móvil reservamos altura (evita salto al animar) */
   @media (max-width: 767px){
-    .invite-stage.is-open{ min-height: 175svh; } /* más espacio para evitar montajes */
-    .invite-stage{ width: 100%; max-width: 420px; margin-inline: auto; }
+    .invite-stage{
+      width: 100%;
+      max-width: 420px;
+      margin-inline: auto;
+      min-height: 175svh;
+    }
+    .invite-stage.is-open{ min-height: 100svh; }
   }
 
   /* ------------- Tarjetas inferiores ------------- */
@@ -307,7 +313,7 @@ body {
     width: min(100%, 1100px);
     margin-inline: auto;
     margin-top: clamp(1.25rem, 2.5vw, 2rem);
-    transition: opacity .6s ease;
+    transition: opacity .6s ease, margin-top .8s ease;
   }
   .extras-grid{
     display: grid;
@@ -317,10 +323,27 @@ body {
   @media (min-width: 768px){
     .extras-grid{ grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
   }
-  .extras-grid img{ width: 100%; height: auto; object-fit: contain; max-width: 560px; }
+  .extras-grid img{
+    width: 100%; height: auto; object-fit: contain; max-width: 560px;
+    transition: transform .25s ease, filter .25s ease;
+    will-change: transform;
+  }
+  .extras-grid a:hover img { transform: translateY(-4px); filter: drop-shadow(0 6px 10px rgba(0,0,0,.12)); }
+  .extras-grid a:active img { transform: translateY(-1px) scale(.98); }
+
+  /* Revelado suave cuando aparecen en viewport */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
 
   /* Accesibilidad */
   @media (prefers-reduced-motion: reduce){
     .invite-stage img{ transition: none !important; }
+    .extras-grid img{ transition: none !important; }
+    .reveal{ transition: none !important; }
   }
+}
+
+/* Empuje del contenido inferior en móvil cuando termina la animación */
+@media (max-width: 767px) {
+  .invite-stage.is-open + .extras-wrap { margin-top: 50vh; }
 }
