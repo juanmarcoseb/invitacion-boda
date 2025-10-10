@@ -38,17 +38,17 @@ export default function Rsvp() {
   const pinId = useId()
   const messageId = useId()
 
-  const anySelectable = useMemo(() => rows.some(r => !r.is_confirmed), [rows])
+  /*const anySelectable = useMemo(() => rows.some(r => !r.is_confirmed), [rows])
   const allSelected = useMemo(
     () => rows.filter(r => !r.is_confirmed).every(r => r.selected),
     [rows]
-  )
+  )*/
   const selectedCount = useMemo(
     () => rows.filter(r => r.selected && !r.is_confirmed).length,
     [rows]
   )
 
-  // ⇩ devuelve cuántos invitados hay para el PIN (además de setRows)
+  // devuelve cuántos invitados hay para el PIN (además de setRows)
   const refreshHousehold = async (p: string): Promise<number> => {
     const { data, error } = await supabase
       .rpc("verify_pin_with_household_status_v2", { p_pin: p })
@@ -97,7 +97,7 @@ export default function Rsvp() {
     }
   }
 
-  const toggleSelectAll = (checked: boolean) => {
+  /*const toggleSelectAll = (checked: boolean) => {
     setRows(prev => prev.map(r => (r.is_confirmed ? r : { ...r, selected: checked })))
   }
 
@@ -105,7 +105,7 @@ export default function Rsvp() {
     setRows(prev =>
       prev.map(r => (r.selected && !r.is_confirmed ? { ...r, attending } : r))
     )
-  }
+  }*/
 
   const handleSubmitBulk = async (e: React.FormEvent) => {
     e.preventDefault()
