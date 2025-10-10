@@ -32,6 +32,9 @@ export default function Rsvp() {
     { guest_id: string; ok: boolean; result: string }[] | null
   >(null)
 
+  // <-- NUEVO: tamaño de familia para el mensaje
+  const [householdSize, setHouseholdSize] = useState<number | null>(null)
+
   const pinId = useId()
   const messageId = useId()
 
@@ -66,6 +69,7 @@ export default function Rsvp() {
             : "no",
       }))
     )
+    setHouseholdSize(list.length) // <-- NUEVO
     return list.length
   }
 
@@ -82,7 +86,7 @@ export default function Rsvp() {
       if (count > 0) {
         setStep("form")
       } else {
-        setError("PIN no válido o sin familia asignada. Verifica el PIN e inténtalo de nuevo.")
+        setError("PIN no válido. Verifica el PIN e inténtalo de nuevo.")
         setStep("pin")
       }
     } catch (err: any) {
@@ -169,7 +173,7 @@ export default function Rsvp() {
               <span className="dot" aria-hidden="true"></span>
             </div>
             <p className="muted text-sm md:text-base">
-              Ingresa el <strong>PIN familiar</strong> que te compartimos en la invitación.
+              Ingresa el <strong>PIN</strong> que te compartimos en la invitación.
             </p>
           </header>
 
@@ -226,6 +230,14 @@ export default function Rsvp() {
           <span className="dot" aria-hidden="true"></span>
         </div>
 
+        {/* NUEVO: Aviso de cupo por familia */}
+        {householdSize !== null && householdSize > 0 && (
+          <p className="muted text-center text-sm md:text-base">
+            Tu invitación es únicamente para <strong>{householdSize}</strong> persona{householdSize === 1 ? "" : "s"}:
+            las que aparecen en la lista. <span className="whitespace-nowrap">No se permiten</span> acompañantes adicionales.
+          </p>
+        )}
+
         <p className="muted text-center text-sm md:text-base">
           Selecciona a los miembros de tu familia, indica si asistirán y envía la confirmación.
         </p>
@@ -245,29 +257,8 @@ export default function Rsvp() {
           />
         </section>
 
-        {/* Acciones rápidas */}
-        <section className="grid gap-3 border-t pt-4 md:flex md:flex-wrap md:items-center md:justify-between">
-          <div className="flex items-center gap-2">
-            <input
-              id="selectAll"
-              type="checkbox"
-              className="check h-4 w-4"
-              checked={anySelectable && allSelected}
-              onChange={(e) => toggleSelectAll(e.target.checked)}
-            />
-            <label htmlFor="selectAll" className="text-sm">Seleccionar todos los pendientes</label>
-          </div>
-
-          <div className="actions-group">
-            <span className="hidden md:inline text-sm">Aplicar a seleccionados:</span>
-            <button type="button" onClick={() => setForSelected("yes")} className="btn-ghost">
-              Asistirán
-            </button>
-            <button type="button" onClick={() => setForSelected("no")} className="btn-ghost">
-              No asistirán
-            </button>
-          </div>
-        </section>
+        {/* Acciones rápidas (comentadas por ti, se dejan tal cual) */}
+        {/* ... */}
 
         {/* Lista de invitados */}
         <section className="space-y-3">

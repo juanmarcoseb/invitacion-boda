@@ -347,3 +347,4 @@ body {
 @media (max-width: 767px) {
   .invite-stage.is-open + .extras-wrap { margin-top: 50vh; }
 }
+
