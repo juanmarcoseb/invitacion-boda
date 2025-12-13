@@ -7,6 +7,8 @@ import LandingClosed from './pages/LandingClosed'
 import InvitationPage from './pages/InvitationPage'
 import Rsvp from './pages/Rsvp'
 import Regalos from "./pages/Regalos"
+import Max from './pages/Max'
+import Cemaco from './pages/Cemaco'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,8 @@ const router = createBrowserRouter([
       { path: '/invitacion', element: <InvitationPage /> }, // Animación + extras
       { path: '/rsvp', element: <Rsvp /> },
       { path: '/regalos', element: <Regalos /> },
+      { path: '/regalos/max', element: <Max /> },
+      { path: '/regalos/cemaco', element: <Cemaco /> },
     ],
   },
 ])
