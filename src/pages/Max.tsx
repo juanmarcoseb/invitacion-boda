@@ -29,8 +29,8 @@ export default function Max() {
             1. Ingresa a nuestra lista de regalos
           </h2>
           <p className="muted text-sm md:text-base">
-            Presione el botón de <strong>Ver lista de regalos</strong> que aparece en la sección de abajo.
-            Esto te llevará a la página de Bodas MAX.
+            Presione el botón de <strong>Ver lista de regalos</strong> que aparece al final de esta sección.
+            Seras dirigido a la página de Bodas MAX.
           </p>
         </section>
 
