@@ -6,6 +6,7 @@ import App from './App'
 import LandingClosed from './pages/LandingClosed'
 import InvitationPage from './pages/InvitationPage'
 import Rsvp from './pages/Rsvp'
+import Regalos from "./pages/Regalos"
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
       { path: '/', element: <LandingClosed /> },   // Landing con sobre cerrado
       { path: '/invitacion', element: <InvitationPage /> }, // Animación + extras
       { path: '/rsvp', element: <Rsvp /> },
+      { path: '/regalos', element: <Regalos /> },
     ],
   },
 ])

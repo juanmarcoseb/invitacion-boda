@@ -144,14 +144,20 @@ export default function InvitationPage() {
             />
           </Link>
 
-          <div className="reveal" ref={setRevealRef as any}>
+          <Link
+            to="/regalos"
+            aria-label="Ir a mesa de regalos"
+            className="block reveal"
+            ref={setRevealRef as any}
+          >
             <img
               src="/img/regalos.png"
               alt="Mesa de regalos"
               className="select-none"
               draggable={false}
             />
-          </div>
+          </Link>
+
         </div>
 
         {/* Código de vestimenta */}
