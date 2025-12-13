@@ -29,8 +29,8 @@ export default function Cemaco() {
             1. Ingresa a nuestra lista
           </h2>
           <p className="muted text-sm md:text-base">
-            Presione el botón de <strong>Ver lista de regalos</strong> que aparece al final de esta sección.
-            Seras dirigido a la página de Registro de regalos de Cemaco.
+            Presiona el botón de <strong>Ver lista de regalos</strong> que aparece al final de esta sección.
+            Serás dirigido a la página "Registro de regalos" de Cemaco.
           </p>
         </section>
 
@@ -41,7 +41,7 @@ export default function Cemaco() {
           </h2>
 
           <p className="muted text-sm md:text-base">
-            En la pantalla que aparece, ingrese los siguientes datos:
+            En la pantalla que aparece, ingresa los siguientes datos:
           </p>
 
           <ul className="list-disc ml-5 muted text-sm md:text-base space-y-1">
@@ -49,10 +49,6 @@ export default function Cemaco() {
             <li><strong>Apellido:</strong> Escobar</li>
             <li>
               <strong>Fecha de evento:</strong> 15/03/2026<br />
-              <span className="text-xs md:text-sm">
-                (Aunque nuestra boda civil es el 08 de febrero, nuestra lista en Cemaco está registrada
-                para marzo. Por favor selecciona marzo.)
-              </span>
             </li>
           </ul>
 
@@ -90,7 +86,7 @@ export default function Cemaco() {
           </h2>
 
           <p className="muted text-sm md:text-base">
-            Al entrar, asegúrate de que en la parte superior diga:
+            Al entrar, asegúrate de que en la parte superior aparezca:
           </p>
 
           <ul className="list-disc ml-5 muted text-sm md:text-base space-y-1">
@@ -100,22 +96,22 @@ export default function Cemaco() {
           </ul>
 
           <p className="muted text-sm md:text-base">
-            Si coincide, estas en la lista correcta.
+            Si coincide, estás en la lista correcta.
           </p>
         </section>
 
         {/* PASO 5 */}
         <section className="space-y-2">
           <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            5. Elige y compre el regalo
+            5. Elige y compra el regalo
           </h2>
 
           <p className="muted text-sm md:text-base">
-            Podras ver todos los regalos disponibles. Para comprar:
+            Podrás ver todos los regalos disponibles. Para comprar:
           </p>
 
           <ol className="list-decimal ml-5 muted text-sm md:text-base space-y-1">
-            <li>Selecciona el regalo que desees.</li>
+            <li>Selecciona el regalo que deseas.</li>
             <li>Presiona <strong>“Añadir al carrito”</strong>.</li>
             <li>Sigue las instrucciones en pantalla para completar la compra.</li>
           </ol>
@@ -146,7 +142,7 @@ export default function Cemaco() {
         {/* Footer volver */}
         <div className="pt-2 flex justify-center">
           <Link to="/regalos" className="btn-ghost">
-            ← Volver a regalos
+            ← Volver a mesa de regalos
           </Link>
         </div>
 

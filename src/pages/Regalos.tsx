@@ -20,7 +20,8 @@ export default function Regalos() {
 
         {/* Texto principal */}
         <p className="muted text-center text-sm md:text-base max-w-[720px] mx-auto">
-          Gracias por querer regalarnos algo en este día tan especial. 
+          Nos hace mucha ilusión contar con ustedes y recibir un detalle en un día tan importante
+          para nosotros. 
           Con mucho cariño hemos preparado nuestras mesas de regalos en{" "}
           <strong>MAX</strong> y <strong>Cemaco</strong>.  
           Puedes elegir la tienda que prefieras para hacernos tu obsequio.
