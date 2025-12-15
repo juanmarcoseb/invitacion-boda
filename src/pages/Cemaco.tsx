@@ -30,69 +30,24 @@ export default function Cemaco() {
           </h2>
           <p className="muted text-sm md:text-base">
             Presiona el botón de <strong>Ver lista de regalos</strong> que aparece al final de esta sección.
-            Serás dirigido a la página "Registro de regalos" de Cemaco.
+            Serás dirigido directamente a nuestra lista de regalos en Cemaco.
           </p>
         </section>
 
         {/* PASO 2 */}
         <section className="space-y-2">
           <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            2. Llena el formulario de búsqueda
+            2. Verifica que sea la lista correcta
           </h2>
 
           <p className="muted text-sm md:text-base">
-            En la pantalla que aparece, ingresa los siguientes datos:
-          </p>
-
-          <ul className="list-disc ml-5 muted text-sm md:text-base space-y-1">
-            <li><strong>Primer nombre:</strong> Marcos</li>
-            <li><strong>Apellido:</strong> Escobar</li>
-            <li>
-              <strong>Fecha de evento:</strong> 15/03/2026<br />
-            </li>
-          </ul>
-
-          <p className="muted text-sm md:text-base">
-            Luego presiona <strong>“Buscar”</strong>.
-          </p>
-        </section>
-
-        {/* PASO 3 */}
-        <section className="space-y-2">
-          <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            3. Selecciona nuestra lista
-          </h2>
-
-          <p className="muted text-sm md:text-base">
-            Aparecerá un resultado con el nombre:
-          </p>
-
-          <div
-            className="rounded-lg border px-4 py-2 text-center font-semibold text-sm md:text-base bg-white/80"
-            style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}
-          >
-            BODA MARCOS Y NATALIA – Fecha: 15/03/2026
-          </div>
-
-          <p className="muted text-sm md:text-base">
-            Haz clic en <strong>“Ver lista de regalos”</strong>.
-          </p>
-        </section>
-
-        {/* PASO 4 */}
-        <section className="space-y-2">
-          <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            4. Verifica que sea la lista correcta
-          </h2>
-
-          <p className="muted text-sm md:text-base">
-            Al entrar, asegúrate de que en la parte superior aparezca:
+            Al ingresar, asegúrate de que en la parte superior aparezca la siguiente información:
           </p>
 
           <ul className="list-disc ml-5 muted text-sm md:text-base space-y-1">
             <li><strong>BODA MARCOS Y NATALIA</strong></li>
-            <li><strong>Juan Marcos Escobar Ballesteros</strong></li>
-            <li><strong>Fecha:</strong> 15/03/2026</li>
+            <li><strong>Juan Marcos Escobar Ballesteros & Natalia Gatica</strong></li>
+            <li><strong>Fecha:</strong> 08/02/2026</li>
           </ul>
 
           <p className="muted text-sm md:text-base">
@@ -100,7 +55,7 @@ export default function Cemaco() {
           </p>
         </section>
 
-        {/* PASO 5 */}
+        {/* PASO 3 */}
         <section className="space-y-2">
           <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
             5. Elige y compra el regalo
@@ -121,10 +76,36 @@ export default function Cemaco() {
           </p>
         </section>
 
+        {/* PASO 4 */}
+        <section className="space-y-2">
+          <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
+            Compra presencial en tienda Cemaco (opcional)
+          </h2>
+
+          <p className="muted text-sm md:text-base">
+            Si prefieres realizar la compra de forma presencial, puedes hacerlo en
+            cualquier tienda Cemaco.
+          </p>
+          <p className="muted text-sm md:text-base">
+            Al llegar a la tienda, indica que deseas comprar un regalo de una lista de regalos
+            y proporciona el siguiente número de evento:
+          </p>
+
+          <div className="rounded-lg border px-4 py-2 text-center font-semibold text-sm md:text-base bg-white/80"
+               style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}>
+            No. de evento: 202603-0024
+          </div>
+
+          <p className="muted text-sm md:text-base">
+            Con este número, el personal de Cemaco podrá encontrar nuestra lista y ayudarte
+            a realizar la compra.
+          </p>
+        </section>
+
         {/* BOTÓN CEMACO */}
         <div className="pt-4 flex justify-center">
           <a
-            href="https://www.cemaco.com/registro-de-regalos"
+            href="https://www.cemaco.com/list/bodamarcosynatalia"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Ir a registro de regalos Cemaco"

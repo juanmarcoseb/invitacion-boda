@@ -30,57 +30,35 @@ export default function Max() {
           </h2>
           <p className="muted text-sm md:text-base">
             Presiona el botón de <strong>Ver lista de regalos</strong> que aparece al final de esta sección.
-            Serás dirigido a la página de Bodas MAX.
+            Serás dirigido directamente a nuestra lista de regalos en Bodas MAX.
           </p>
         </section>
 
         {/* PASO 2 */}
         <section className="space-y-2">
           <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            2. Llena el formulario de búsqueda
+            2. Verifica que sea nuestra lista
           </h2>
 
           <p className="muted text-sm md:text-base">
-            En la pantalla que aparece, ingresa los siguientes datos:
+            Al ingresar, asegúrate de que la lista corresponda a:
           </p>
 
-          <ul className="list-disc ml-5 muted text-sm md:text-base space-y-1">
-            <li><strong>Nombre:</strong> Marcos o Naty</li>
-            <li><strong>Apellido:</strong> Escobar o Gatica</li>
-            <li>
-              <strong>Mes:</strong> Selecciona <strong>Marzo</strong><br />
-            </li>
-            <li><strong>Año:</strong> 2026</li>
-          </ul>
+          <div className="rounded-lg border px-4 py-2 text-center font-semibold text-sm md:text-base bg-white/80"
+               style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}>
+            Escobar Gatica<br></br>
+            15/03/2026
+          </div>
 
           <p className="muted text-sm md:text-base">
-            Luego presiona <strong>"Buscar boda"</strong>.
+            Si coincide, estás en la lista correcta.
           </p>
         </section>
 
         {/* PASO 3 */}
         <section className="space-y-2">
           <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            3. Selecciona nuestra lista
-          </h2>
-          <p className="muted text-sm md:text-base">
-            Aparecerá un cuadro con nuestra lista de regalos. Busca la que aparece como:
-          </p>
-
-          <div className="rounded-lg border px-4 py-2 text-center font-semibold text-sm md:text-base bg-white/80"
-               style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}>
-            Escobar Gatica – 15/03/2026
-          </div>
-
-          <p className="muted text-sm md:text-base">
-            Presiona ese cuadro.
-          </p>
-        </section>
-
-        {/* PASO 4 */}
-        <section className="space-y-2">
-          <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            4. Elige el regalo
+            3. Elige el regalo
           </h2>
           <p className="muted text-sm md:text-base">
             Ya podrás ver todos los regalos disponibles en nuestra lista:
@@ -98,13 +76,14 @@ export default function Max() {
           </ul>
         </section>
 
-        {/* PASO 5 */}
+        {/* PASO 4 */}
         <section className="space-y-2">
           <h2 className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)]">
-            5. Si compras en tienda
+            Compra en tienda Max (si aplica)
           </h2>
           <p className="muted text-sm md:text-base">
-            Puedes ir a cualquier tienda MAX e indicar:
+            Para los regalos que solo están disponibles en tienda, puedes acudir a
+            cualquier tienda MAX e indicar lo siguiente:
           </p>
 
           <div className="rounded-lg border px-4 py-3 text-center italic text-sm md:text-base bg-white/80"
@@ -117,7 +96,7 @@ export default function Max() {
         {/* BOTÓN MAX */}
         <div className="pt-4 flex justify-center">
           <a
-            href="https://www2.max.com.gt/bodas"
+            href="https://www2.max.com.gt/bodas/index/regalos/boda/42676/pareja/escobar-gatica/fecha/15-03-2026"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Ir a Bodas MAX"
