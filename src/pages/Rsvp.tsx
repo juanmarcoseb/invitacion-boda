@@ -35,6 +35,8 @@ export default function Rsvp() {
   // <-- NUEVO: tamaño de familia para el mensaje
   const [householdSize, setHouseholdSize] = useState<number | null>(null)
 
+  const [showGiftModal, setShowGiftModal] = useState(false)
+
   const pinId = useId()
   const messageId = useId()
 
@@ -145,6 +147,7 @@ export default function Rsvp() {
       setOkMsg(
         `Proceso terminado: ${okTotal} confirmad${okTotal === 1 ? "o" : "os"}${skipped > 0 ? `, ${skipped} omitid${skipped === 1 ? "o" : "os"}.` : "."}`
       )
+      setShowGiftModal(true)
     } catch (err: any) {
       setError(err.message || "No pudimos guardar el RSVP en lote. Intenta de nuevo.")
     } finally {
@@ -392,6 +395,47 @@ export default function Rsvp() {
           </section>
         )}
       </div>
+      {showGiftModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="relative bg-white rounded-2xl shadow-xl max-w-md w-[90%] p-6 md:p-8 text-center">
+            
+            {/* Botón cerrar */}
+            <button
+              onClick={() => setShowGiftModal(false)}
+              className="absolute top-3 right-3 text-sm muted hover:opacity-70"
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
+
+            {/* Imagen sello */}
+            <img
+              src="/img/sello-regalo.png"
+              alt="Regalos"
+              className="mx-auto w-40 md:w-44 mb-5"
+            />
+
+            {/* Texto */}
+            <p className="font-heading text-[22px] md:text-[26px] text-[var(--brand-primary)] leading-snug mb-3">
+              ¡Gracias por confirmar!
+            </p>
+
+            <p className="muted text-sm md:text-base mb-6">
+              Si deseas darnos un regalo, puedes hacerlo aquí.
+            </p>
+
+            {/* Botón regalos */}
+            <Link
+              to="/regalos"
+              className="btn-primary inline-flex justify-center"
+              onClick={() => setShowGiftModal(false)}
+            >
+              Ver lista de regalos
+            </Link>
+          </div>
+        </div>
+      )}
+
     </section>
   )
 }
