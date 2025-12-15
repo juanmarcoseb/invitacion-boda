@@ -430,7 +430,7 @@ export default function Rsvp() {
               className="btn-primary inline-flex justify-center"
               onClick={() => setShowGiftModal(false)}
             >
-              Ver lista de regalos
+              Ver mesa de regalos
             </Link>
           </div>
         </div>
