@@ -46,8 +46,7 @@ export default function Max() {
 
           <div className="rounded-lg border px-4 py-2 text-center font-semibold text-sm md:text-base bg-white/80"
                style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}>
-            Escobar Gatica<br></br>
-            15/03/2026
+            Escobar Gatica
           </div>
 
           <p className="muted text-sm md:text-base">
@@ -88,8 +87,7 @@ export default function Max() {
 
           <div className="rounded-lg border px-4 py-3 text-center italic text-sm md:text-base bg-white/80"
                style={{ borderColor: "color-mix(in oklab, var(--brand-gold2) 55%, #fff)" }}>
-            “Quiero comprar un regalo para la lista de boda de Marcos Escobar y Natalia Gatica,
-            fecha 15 de marzo de 2026.”
+            “Quiero comprar un regalo para la lista de boda de Marcos Escobar y Natalia Gatica.”
           </div>
         </section>
 

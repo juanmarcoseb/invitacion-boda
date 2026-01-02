@@ -47,7 +47,6 @@ export default function Cemaco() {
           <ul className="list-disc ml-5 muted text-sm md:text-base space-y-1">
             <li><strong>BODA MARCOS Y NATALIA</strong></li>
             <li><strong>Juan Marcos Escobar Ballesteros & Natalia Gatica</strong></li>
-            <li><strong>Fecha:</strong> 08/02/2026</li>
           </ul>
 
           <p className="muted text-sm md:text-base">
